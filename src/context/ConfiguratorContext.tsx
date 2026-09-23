@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { createDefaultConfiguration, configurationTitle } from '@/lib/configuration';
+import { createDefaultConfiguration, configurationTitle, buildConfigurationFromProduct } from '@/lib/configuration';
 import { calculateCakePrice } from '@/lib/pricing';
 import type { CakeConfiguration, PriceBreakdown, OccasionId, CartItem } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
@@ -43,7 +43,12 @@ function initialConfig(search: URLSearchParams, cartItems: CartItem[]) {
   const config = createDefaultConfiguration();
   const occasion = search.get('occasion') as OccasionId | null;
   if (occasion && OCCASIONS.some((o) => o.id === occasion)) config.occasion = occasion;
-  return { config, editingId: null, sourceSlug: search.get('product') };
+  // « Personnaliser » depuis une fiche produit : précharge la recette de la création
+  const productSlug = search.get('product');
+  if (productSlug) {
+    return { config: buildConfigurationFromProduct(productSlug), editingId: null, sourceSlug: productSlug };
+  }
+  return { config, editingId: null, sourceSlug: null };
 }
 
 export function ConfiguratorProvider({ children }: { children: React.ReactNode }) {

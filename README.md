@@ -104,4 +104,3 @@ modèles 3D réels.
 - `docs/reference-ui.png` : mockup de référence d'agencement.
 - `docs/source-logo.jpg` + `docs/process_logo.py` : logo fourni et script de
   génération des déclinaisons (fond retiré, crops, favicon).
-"# hekam" 

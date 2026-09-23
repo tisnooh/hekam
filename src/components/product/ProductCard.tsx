@@ -74,6 +74,7 @@ export default function ProductCard({ product, tone = 'light', offset = false, p
         <span
           className={cn(
             'label mt-5 inline-block max-w-0 overflow-hidden whitespace-nowrap transition-all duration-700 ease-luxe group-hover:max-w-[200px]',
+            'max-lg:max-w-[200px] [@media(pointer:coarse)]:max-w-[200px]',
             'border-b border-bronze/50 pb-1',
             dark ? 'text-bronze-clair' : 'text-bronze',
           )}
