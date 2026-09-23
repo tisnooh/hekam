@@ -1,0 +1,24 @@
+# Dépendances & builds
+node_modules
+.next
+out
+build
+dist
+coverage
+
+# Environnement — jamais de secrets versionnés
+.env
+.env.local
+.env.production
+.env.*.local
+!.env.example
+
+# Logs & divers
+*.log
+npm-debug.log*
+.DS_Store
+.vscode
+.idea
+
+# Next
+next-env.d.ts.bak

@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
+  --noir: #070707;
+  --noir-soft: #111111;
+  --ivoire: #f4efe8;
+  --creme: #ede4da;
+  --chaud: #faf8f5;
+  --bronze: #a7793d;
+  --brun: #382217;
+  --gris: #9a9691;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-noir text-ivoire font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgb(167 121 61 / 0.35);
+    color: var(--chaud);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--bronze);
+    outline-offset: 3px;
+  }
+
+  /* Scrollbar discrète, cohérente avec la direction artistique */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(167 121 61 / 0.35) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgb(167 121 61 / 0.3);
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  /* Petits labels : capitales, tracking large */
+  .label {
+    @apply font-sans text-[10px] uppercase tracking-label text-gris;
+  }
+  .label-bronze {
+    @apply label text-bronze;
+  }
+
+  /* Filet horizontal fin */
+  .hairline {
+    @apply block h-px w-full bg-current opacity-15;
+  }
+
+  /* Bouton principal : rectangle net, jamais de pilule */
+  .btn {
+    @apply inline-flex items-center justify-center gap-3 border px-9 py-[17px]
+      font-sans text-[10px] uppercase tracking-[0.26em]
+      transition-all duration-600 ease-luxe select-none;
+  }
+  .btn-primary {
+    @apply btn border-ivoire bg-ivoire text-noir hover:bg-bronze hover:border-bronze hover:text-chaud;
+  }
+  .btn-ghost {
+    @apply btn border-ivoire/25 bg-transparent text-ivoire hover:border-bronze hover:text-bronze-clair;
+  }
+  .btn-ghost-dark {
+    @apply btn border-brun/25 bg-transparent text-brun hover:border-bronze hover:text-bronze;
+  }
+  .btn-primary-dark {
+    @apply btn border-brun bg-brun text-chaud hover:bg-bronze hover:border-bronze;
+  }
+
+  .link-underline {
+    @apply relative inline-block transition-colors duration-400 ease-luxe;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 600ms cubic-bezier(0.22, 1, 0.36, 1), color 400ms;
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
