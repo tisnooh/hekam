@@ -78,7 +78,7 @@ export default function CakeViewer360({
   }, [interactive, rotation]);
 
   return (
-    <div className={cn('relative select-none', className)}>
+    <div className={cn('relative h-full w-full select-none', className)}>
       <motion.div
         ref={frame}
         tabIndex={interactive ? 0 : -1}

@@ -46,7 +46,7 @@ export default function DemoCakeVisual({
   return (
     <svg
       viewBox="0 0 400 400"
-      className={cn('h-full w-full', className)}
+      className={cn('block h-full w-full', className)}
       role="img"
       aria-label={`Aperçu de la création : forme ${shape}, teinte ${decoration.mainColor}, style ${decoration.style}`}
       style={{ transform: `perspective(900px) rotateY(${rotation}deg)`, transformStyle: 'preserve-3d' }}
