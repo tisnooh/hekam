@@ -1,4 +1,4 @@
-import type { DecorationOptionId, DecorationStyleId, ShapeId, SizeId } from '@/lib/types';
+import type { DecorationOptionId, DecorationStyleId, FinishId, ShapeId, SizeId } from '@/lib/types';
 
 /**
  * Configuration centrale des prix (données de démonstration).
@@ -37,11 +37,8 @@ export const PRICING = {
     entreprise: 10,
   } satisfies Record<DecorationStyleId, number>,
 
-  /** Finition velours (supplément) */
-  finish: { mate: 0, velours: 6 },
-
-  /** Texture de surface */
-  texture: { lisse: 0, strie: 3, vague: 3 },
+  /** Finitions */
+  finish: { lisse: 0, mate: 0, velours: 6 } satisfies Record<FinishId, number>,
 
   /** Options de décoration */
   option: {
@@ -53,6 +50,6 @@ export const PRICING = {
     topper: 8,
   } satisfies Record<DecorationOptionId, number>,
 
-  /** Message : couleur de lettrage incluse */
+  /** Message : lettrage et couleur inclus */
   message: 0,
 } as const;

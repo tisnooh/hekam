@@ -80,7 +80,7 @@ export default function CartDrawer() {
                           </div>
                           <dl className="mt-3.5 space-y-1.5">
                             <Row label="Occasion" value={OCCASIONS.find((o) => o.id === item.configuration.occasion)?.label ?? '—'} />
-                            <Row label="Format" value={SIZES.find((s) => s.id === item.configuration.size)?.label ?? ''} />
+                            <Row label="Format" value={SIZES.find((s) => s.id === item.configuration.size)?.label ?? '—'} />
                             <Row
                               label="Saveurs"
                               value={
@@ -95,11 +95,11 @@ export default function CartDrawer() {
                             />
                             <Row
                               label="Décor"
-                              value={DECORATION_STYLES.find((s) => s.id === item.configuration.decoration.style)?.label ?? ''}
+                              value={DECORATION_STYLES.find((s) => s.id === item.configuration.decoration.style)?.label ?? '—'}
                             />
                             {item.configuration.message.text && <Row label="Message" value={item.configuration.message.text} />}
                             <Row
-                              label={item.configuration.delivery.mode === 'livraison' ? 'Livraison' : 'Retrait'}
+                              label={item.configuration.delivery.mode === 'livraison' ? 'Livraison' : item.configuration.delivery.mode === 'retrait' ? 'Retrait' : 'Mode'}
                               value={
                                 item.configuration.delivery.date
                                   ? `${formatDateFr(item.configuration.delivery.date)}${item.configuration.delivery.slot ? `, ${item.configuration.delivery.slot}` : ''}`

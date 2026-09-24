@@ -1,63 +1,92 @@
 'use client';
 
+import Image from 'next/image';
 import { useConfigurator } from '@/context/ConfiguratorContext';
-import { Swatch, StepSubTitle } from '@/components/configurator/ConfiguratorOptions';
+import { StepSubTitle, TextOption } from '@/components/configurator/ConfiguratorOptions';
 import { FLAVOUR_CATEGORIES, RECOMMENDED_COMBOS, isPremiumFlavour } from '@/lib/data/flavours';
 import { PRICING } from '@/lib/data/pricing';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, cn } from '@/lib/utils';
 import type { FlavourCategoryId } from '@/lib/types';
 
-/** Étape 4 — trois rangées de pastilles ; allergènes en pied. */
+/** Étape 4 — trois sous-sections riches + accords recommandés applicables. */
 export default function StepSaveurs() {
   const { config, update } = useConfigurator();
 
   const setFlavour = (cat: FlavourCategoryId, id: string) =>
     update({ flavours: { ...config.flavours, [cat]: id } });
 
-  const isRecommended = (cat: FlavourCategoryId, optionId: string) =>
-    RECOMMENDED_COMBOS.some(
-      (combo) =>
-        combo[cat] === optionId &&
-        Object.entries(combo).every(([c, id]) => c === cat || config.flavours[c as FlavourCategoryId] === id),
-    );
-
-  const allergens = Array.from(
-    new Set(
-      FLAVOUR_CATEGORIES.flatMap((cat) => cat.options.find((o) => o.id === config.flavours[cat.id])?.allergens ?? []),
-    ),
-  );
+  const applyCombo = (combo: { biscuit: string; creme: string; insert: string }) =>
+    update({ flavours: { biscuit: combo.biscuit, creme: combo.creme, insert: combo.insert } });
 
   return (
     <div className="space-y-12">
       {FLAVOUR_CATEGORIES.map((cat) => (
-        <div key={cat.id}>
-          <StepSubTitle hint="Une sélection par catégorie">{cat.label}</StepSubTitle>
-          <div className="flex flex-wrap gap-x-7 gap-y-6">
-            {cat.options.map((option) => (
-              <Swatch
-                key={option.id}
-                hex={option.swatch}
-                label={option.name}
-                selected={config.flavours[cat.id] === option.id}
-                onClick={() => setFlavour(cat.id, option.id)}
-                sublabel={
-                  isPremiumFlavour(cat.id, option.id)
-                    ? `+ ${formatPrice(PRICING.premiumFlavour)}`
-                    : isRecommended(cat.id, option.id)
-                      ? 'accord recommandé'
-                      : undefined
-                }
-              />
-            ))}
+        <fieldset key={cat.id}>
+          <StepSubTitle hint="Une seule sélection">{cat.label}</StepSubTitle>
+          <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label={cat.label}>
+            {cat.options.map((option) => {
+              const selected = config.flavours[cat.id] === option.id;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => setFlavour(cat.id, option.id)}
+                  className={cn(
+                    'group flex items-center gap-4 border p-3 text-left transition-all duration-500 ease-luxe',
+                    selected ? 'border-bronze bg-noir-lift' : 'border-ivoire/10 hover:border-ivoire/28',
+                  )}
+                >
+                  <span className="relative h-12 w-12 shrink-0 overflow-hidden" aria-hidden="true">
+                    {option.image ? (
+                      <Image src={option.image} alt="" width={96} height={96} loading="lazy" className={cn('h-full w-full object-cover transition-opacity duration-500', selected ? 'opacity-95' : 'opacity-55 group-hover:opacity-80')} />
+                    ) : (
+                      <span
+                        className={cn('block h-full w-full transition-opacity duration-500', selected ? 'opacity-100' : 'opacity-60 group-hover:opacity-85')}
+                        style={{ background: `radial-gradient(circle at 35% 30%, ${option.swatch} 0%, ${option.swatch} 55%, rgba(0,0,0,0.55) 100%)` }}
+                      />
+                    )}
+                    {selected && <span className="absolute inset-0 ring-1 ring-inset ring-bronze/70" />}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-baseline justify-between gap-3">
+                      <span className={cn('font-serif text-[19px] font-light leading-none', selected ? 'text-ivoire' : 'text-ivoire/80')}>
+                        {option.name}
+                      </span>
+                      {isPremiumFlavour(cat.id, option.id) && (
+                        <span className="shrink-0 font-sans text-[10px] tracking-[0.08em] text-bronze-clair">
+                          + {formatPrice(PRICING.premiumFlavour)}
+                        </span>
+                      )}
+                    </span>
+                    <span className="mt-1.5 block truncate text-[11.5px] text-ivoire/45">{option.description}</span>
+                    <span className="mt-1 block truncate text-[10px] uppercase tracking-[0.12em] text-ivoire/28">
+                      {option.allergens.length > 0 ? option.allergens.join(', ') : 'sans allergène majeur'}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </div>
+        </fieldset>
       ))}
 
-      <div className="border-t border-ivoire/[0.09] pt-6">
-        <p className="label mb-2.5 !text-[9.5px]">Allergènes de votre composition</p>
-        <p className="max-w-[52ch] text-[12.5px] leading-relaxed text-ivoire/45">
-          {allergens.length > 0 ? allergens.join(', ') : 'Aucun allergène majeur dans cette composition.'}
-        </p>
+      <div>
+        <StepSubTitle hint="Application en un geste">Accords recommandés</StepSubTitle>
+        <div className="flex flex-wrap gap-x-7 gap-y-4">
+          {RECOMMENDED_COMBOS.map((combo) => {
+            const active =
+              config.flavours.biscuit === combo.biscuit &&
+              config.flavours.creme === combo.creme &&
+              config.flavours.insert === combo.insert;
+            return (
+              <TextOption key={combo.label} selected={active} onClick={() => applyCombo(combo)}>
+                {combo.label}
+              </TextOption>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -114,7 +114,7 @@ export default function CheckoutPage() {
                     >
                       <span className="text-ivoire/70">{item.title}</span>
                       <span className="text-ivoire/40">
-                        {item.configuration.delivery.mode === 'livraison' ? 'Livraison' : 'Retrait'} ·{' '}
+                        {item.configuration.delivery.mode === 'livraison' ? 'Livraison' : item.configuration.delivery.mode === 'retrait' ? 'Retrait' : 'Mode à définir'} ·{' '}
                         {item.configuration.delivery.date ? formatDateFr(item.configuration.delivery.date) : 'date à confirmer'}{' '}
                         {item.configuration.delivery.slot ?? ''}
                       </span>

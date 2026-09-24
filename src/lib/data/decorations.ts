@@ -1,4 +1,4 @@
-import type { DecorationOptionId, DecorationStyleId, FinishId, TextureId } from '@/lib/types';
+import type { DecorationOptionId, DecorationStyleId, FinishId } from '@/lib/types';
 
 export interface DecorationStyle {
   id: DecorationStyleId;
@@ -22,34 +22,35 @@ export const DECORATION_STYLES: DecorationStyle[] = [
 
 export const DECORATION_OPTIONS: DecorationOption[] = [
   { id: 'fleurs', label: 'Fleurs' },
-  { id: 'fruits', label: 'Fruits' },
   { id: 'perles', label: 'Perles' },
+  { id: 'fruits', label: 'Fruits' },
   { id: 'ruban', label: 'Ruban' },
   { id: 'dorure', label: 'Dorure' },
   { id: 'topper', label: 'Topper' },
 ];
 
-export const FINISHES: Array<{ id: FinishId; label: string }> = [
-  { id: 'mate', label: 'Finition mate' },
-  { id: 'velours', label: 'Finition velours' },
+export const FINISHES: Array<{ id: FinishId; label: string; hint: string }> = [
+  { id: 'lisse', label: 'Lisse', hint: 'Glaçage tiré, reflet doux' },
+  { id: 'mate', label: 'Mate', hint: 'Crème satinée, sans brillance' },
+  { id: 'velours', label: 'Velours', hint: 'Grain fin pulvérisé à froid' },
 ];
 
-export const TEXTURES: Array<{ id: TextureId; label: string }> = [
-  { id: 'lisse', label: 'Lisse' },
-  { id: 'strie', label: 'Striée' },
-  { id: 'vague', label: 'Vague' },
-];
-
-/** Palette maison — teintes sobres uniquement. */
+/** Palette maison — teintes sobres, doré réservé aux accents. */
 export const COLOR_PALETTE: Array<{ id: string; label: string; hex: string }> = [
   { id: 'ivoire', label: 'Ivoire', hex: '#F4EFE8' },
-  { id: 'creme', label: 'Crème', hex: '#EDE4DA' },
+  { id: 'blanc', label: 'Blanc', hex: '#FAF8F5' },
   { id: 'poudre', label: 'Rose poudré', hex: '#D8BFB4' },
+  { id: 'beige', label: 'Beige', hex: '#D9C4A3' },
+  { id: 'chocolat', label: 'Chocolat', hex: '#4A2E1E' },
+  { id: 'rouge', label: 'Rouge', hex: '#7E2A33' },
+  { id: 'nuit', label: 'Bleu nuit', hex: '#232B33' },
   { id: 'sauge', label: 'Vert sauge', hex: '#9AA694' },
-  { id: 'cacao', label: 'Cacao', hex: '#4A2E1E' },
-  { id: 'noir', label: 'Noir doux', hex: '#1A1714' },
 ];
 
-export function paletteHex(id: string): string {
+export function paletteHex(id: string | null): string {
   return COLOR_PALETTE.find((c) => c.id === id)?.hex ?? '#F4EFE8';
+}
+
+export function paletteLabel(id: string | null): string {
+  return COLOR_PALETTE.find((c) => c.id === id)?.label ?? '—';
 }

@@ -24,16 +24,18 @@ export type DecorationStyleId =
 
 export type DecorationOptionId = 'fleurs' | 'fruits' | 'perles' | 'ruban' | 'dorure' | 'topper';
 
-export type FinishId = 'mate' | 'velours';
-export type TextureId = 'lisse' | 'strie' | 'vague';
+export type FinishId = 'lisse' | 'mate' | 'velours';
 
 export interface FlavourOption {
   id: string;
   name: string;
-  /** Couleur d'aperçu pour les pastilles du configurateur */
+  /** Couleur d'aperçu (pastille / dégradé) */
   swatch: string;
+  /** Texture photo optionnelle (chemin /public) */
+  image?: string;
+  description: string;
   allergens: string[];
-  /** Supplément éventuel (ex. praliné) — montant défini dans pricing.ts */
+  /** Supplément éventuel (montant dans pricing.ts) */
   premium?: boolean;
 }
 
@@ -46,6 +48,7 @@ export interface SizeOption {
 
 export interface DeliveryAddress {
   address: string;
+  complement: string;
   city: string;
   postalCode: string;
   phone: string;
@@ -54,36 +57,41 @@ export interface DeliveryAddress {
 export interface CakeMessage {
   /** Texte posé sur le gâteau (25 caractères max) */
   text: string;
+  /** Âge fêté (optionnel) */
+  age: string;
   color: string;
   topper: boolean;
 }
 
 export interface CakeDecoration {
-  style: DecorationStyleId;
-  mainColor: string;
-  secondaryColor: string;
-  texture: TextureId;
-  finish: FinishId;
+  style: DecorationStyleId | null;
+  mainColor: string | null;
+  secondaryColor: string | null;
+  finish: FinishId | null;
   options: DecorationOptionId[];
 }
 
 export interface CakeDelivery {
-  mode: 'retrait' | 'livraison';
+  mode: 'retrait' | 'livraison' | null;
   date: string | null;
   slot: string | null;
   address: DeliveryAddress | null;
 }
 
+/**
+ * Configuration unique du configurateur (source de vérité).
+ * Tant qu'un choix n'est pas fait par le client, la valeur est null :
+ * aucune donnée n'est inventée.
+ */
 export interface CakeConfiguration {
   occasion: OccasionId | null;
-  size: SizeId;
-  shape: ShapeId;
+  size: SizeId | null;
+  shape: ShapeId | null;
   flavours: Record<FlavourCategoryId, string | null>;
   decoration: CakeDecoration;
   message: CakeMessage;
   workshopNotes: string;
   inspirationName: string | null;
-  logoName: string | null;
   delivery: CakeDelivery;
 }
 
@@ -94,6 +102,8 @@ export interface PriceLine {
 }
 
 export interface PriceBreakdown {
+  /** false tant que le format (base du prix) n'est pas choisi */
+  ready: boolean;
   lines: PriceLine[];
   total: number;
 }

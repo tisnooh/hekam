@@ -5,53 +5,42 @@ import { useConfigurator } from '@/context/ConfiguratorContext';
 import { OCCASIONS } from '@/lib/data/occasions';
 import { cn } from '@/lib/utils';
 
-/** Étape 1 — images minimalistes, légendes sous la photo. */
+/** Étape 1 — bordure fine, fond presque noir, état actif bronze. */
 export default function StepOccasion() {
   const { config, update } = useConfigurator();
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 md:gap-x-6 md:gap-y-12">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3" role="radiogroup" aria-label="Occasion">
       {OCCASIONS.map((occasion) => {
         const selected = config.occasion === occasion.id;
         return (
           <button
             key={occasion.id}
             type="button"
+            role="radio"
+            aria-checked={selected}
             onClick={() => update({ occasion: occasion.id })}
-            aria-pressed={selected}
-            className="group block text-left"
+            className={cn(
+              'group border bg-noir-soft/60 p-3 text-left transition-all duration-500 ease-luxe',
+              selected ? 'border-bronze bg-noir-lift' : 'border-ivoire/12 hover:border-ivoire/30',
+            )}
           >
-            <div className="overflow-hidden bg-noir-soft">
+            <div className="relative mb-3 overflow-hidden">
               <Image
                 src={occasion.image}
                 alt=""
-                width={800}
-                height={600}
+                width={400}
+                height={220}
                 loading="lazy"
                 className={cn(
-                  'aspect-[4/3] w-full object-cover transition-all duration-[1200ms] ease-luxe',
-                  selected
-                    ? 'opacity-100'
-                    : 'opacity-45 group-hover:opacity-75 group-hover:scale-[1.015]',
+                  'aspect-[16/9] w-full object-cover transition-all duration-700 ease-luxe',
+                  selected ? 'opacity-90' : 'opacity-40 group-hover:opacity-65',
                 )}
               />
+              {selected && <span className="absolute inset-0 ring-1 ring-inset ring-bronze/60" aria-hidden="true" />}
             </div>
-            <p
-              className={cn(
-                'label mt-4 !text-[9.5px] transition-colors duration-500',
-                selected ? '!text-bronze-clair' : 'text-ivoire/60 group-hover:text-ivoire/90',
-              )}
-            >
-              {occasion.label}
-            </p>
-            <span
-              className={cn(
-                'mt-2 block h-px origin-left transition-transform duration-700 ease-luxe',
-                selected ? 'scale-x-100 bg-bronze' : 'scale-x-0 bg-bronze',
-              )}
-              aria-hidden="true"
-            />
-            <p className="mt-2.5 truncate text-[11.5px] text-ivoire/35">{occasion.hint}</p>
+            <p className={cn('label !text-[9.5px]', selected ? '!text-bronze-clair' : 'text-ivoire/75')}>{occasion.label}</p>
+            <p className="mt-1.5 truncate text-[11px] text-ivoire/35">{occasion.hint}</p>
           </button>
         );
       })}
